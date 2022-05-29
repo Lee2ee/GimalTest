@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -91,6 +92,32 @@ class Piano extends JFrame implements ActionListener {
 			southP.add(control_button[i]);
 		}
 		
+		// 버튼컬러
+		note_button[0].setBackground(new Color(255, 0, 0));		// 빨
+		note_button[1].setBackground(new Color(255, 100, 0));	// 주
+		note_button[2].setBackground(new Color(255, 255, 0));	// 노
+		note_button[3].setBackground(new Color(0, 255, 0));		// 초
+		note_button[4].setBackground(new Color(0, 100, 255));	// 파
+		note_button[5].setBackground(new Color(0, 0, 255));		// 남
+		note_button[6].setBackground(new Color(100, 0, 255));	// 보
+		
+		
+		// 글꼴컬러
+		note_button[0].setForeground(new Color(0, 255, 0));
+		note_button[1].setForeground(new Color(0, 0, 255));
+		note_button[2].setForeground(new Color(100, 0, 255));
+		note_button[3].setForeground(new Color(255, 0, 0));
+		note_button[4].setForeground(new Color(255, 100, 0));
+		note_button[5].setForeground(new Color(255, 50, 0));
+		note_button[6].setForeground(new Color(255, 255, 0));
+		
+		// 글꼴
+		for (int i = 0; i < note_button.length; i++) {
+		note_button[i].setFont(new Font("MapleStory Bold", Font.BOLD, 40));
+		}
+	
+		
+		
 		// 컨테이너에 붙이기
 		ct.add(northP, BorderLayout.NORTH);
 		ct.add(centerP, BorderLayout.CENTER);
@@ -113,7 +140,7 @@ class Piano extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 		String action = e.getActionCommand();
 		// 메뉴바 이벤트
-		if (action.equals("Save")) {
+		if (action == "Save") {
 			JOptionPane.showMessageDialog(null, "Save Test");
 		} else if (action == "Open") {
 			JOptionPane.showMessageDialog(null, "Open Test");
@@ -124,7 +151,7 @@ class Piano extends JFrame implements ActionListener {
 		}
 
 		// note버튼 이벤트
-		if (action.equals("도")) {
+		if (action == "도") {
 			JOptionPane.showMessageDialog(null, "도 Test");
 		} else if (action == "레") {
 			JOptionPane.showMessageDialog(null, "레 Test");
@@ -139,6 +166,9 @@ class Piano extends JFrame implements ActionListener {
 		} else if (action == "시") {
 			JOptionPane.showMessageDialog(null, "시 Test");
 		}
+		
+		// checkbox 이벤트
+		
 
 	}
 }

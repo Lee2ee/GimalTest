@@ -123,7 +123,7 @@ class Piano extends JFrame implements ActionListener {
 			JOptionPane.showMessageDialog(null, "Logout Test");
 		}
 
-		// note버튼 이벤트 //
+		// note버튼 이벤트
 		if (action.equals("도")) {
 			JOptionPane.showMessageDialog(null, "도 Test");
 		} else if (action == "레") {

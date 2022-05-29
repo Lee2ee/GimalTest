@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,16 +24,16 @@ import javax.swing.border.Border;
 class Piano extends JFrame implements ActionListener {
 	public Piano() {
 		Container ct = getContentPane();
-		ct.setLayout(new BorderLayout(1, 3));
-		BorderLayout bl = new BorderLayout(10, 10);
 
-		JPanel northP, north_1, north_2, jp2_1, centerP;
+		JPanel northP, north_1, north_2, centerP, southP;
 		String note_str[] = { "도", "레", "미", "파", "솔", "라", "시" };
 		String mi_str[] = { "Save", "Open", "Reset", "Logout" };
+		String control_str[] = {"STOP", "PLAY", "PAUSE"};
 		JMenuItem mi[] = new JMenuItem[4];
 		JButton note_button[] = new JButton[7];
 		JCheckBox note_check[] = new JCheckBox[7];
-
+		JButton control_button[] = new JButton[3];
+		
 		// 메뉴바
 		JMenuBar menu = new JMenuBar();
 		JMenu fileMenu = new JMenu("File");
@@ -67,9 +68,12 @@ class Piano extends JFrame implements ActionListener {
 				north_2.add(note_check[i]);
 			}
 		}
+		northP.add(north_1, BorderLayout.WEST);
+		northP.add(north_2, BorderLayout.CENTER);
 		
 		// 프로그레스 바
 		centerP = new JPanel();
+		centerP.setLayout(new GridLayout(1, 1, 10, 10));
 		JProgressBar pb = new JProgressBar();
 		pb.setValue(0);
 		pb.setStringPainted(true);
@@ -78,28 +82,28 @@ class Piano extends JFrame implements ActionListener {
 		centerP.add(pb);
 		
 		// 정지 시작 일시정지 버튼
+		southP = new JPanel();
+		southP.setLayout(new GridLayout(1, 3, 100, 10));
+		for (int i = 0; i < control_button.length; i++) {
+			control_button[i] = new JButton(control_str[i]);
+			control_button[i].setPreferredSize(new Dimension(10, 80));
+			control_button[i].addActionListener(this);
+			southP.add(control_button[i]);
+		}
 		
-		
-		
-		northP.add(north_1, BorderLayout.WEST);
-		northP.add(north_2, BorderLayout.CENTER);
-
-		
+		// 컨테이너에 붙이기
 		ct.add(northP, BorderLayout.NORTH);
 		ct.add(centerP, BorderLayout.CENTER);
+		ct.add(southP, BorderLayout.SOUTH);
 		
-		
-		// 지우기
-		northP.setBackground(Color.blue);
-		north_1.setBackground(Color.cyan);
-		north_2.setBackground(Color.pink);
-//		jp2_1.setBackground(Color.red);
-//		jp3.setBackground(Color.GRAY);
-		ct.setBackground(Color.MAGENTA);
+		// 여백
+		northP.setBorder(BorderFactory.createEmptyBorder(10 , 10, 10 , 10));
+		centerP.setBorder(BorderFactory.createEmptyBorder(10 , 10, 10 , 10));
+		southP.setBorder(BorderFactory.createEmptyBorder(10 , 10, 10 , 10));
 
 		// 기본설정
 		setTitle("Piano");
-		setSize(1280, 700);
+		setSize(1400, 750);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}

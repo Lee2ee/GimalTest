@@ -14,6 +14,8 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -32,6 +34,14 @@ import javax.swing.KeyStroke;
 import javax.swing.border.Border;
 
 class Piano extends JFrame {
+
+	List<JCheckBox> select_check = new ArrayList<JCheckBox>();
+//	List<JCheckBox> select_re = new ArrayList<JCheckBox>();
+//	List<JCheckBox> select_mi = new ArrayList<JCheckBox>();
+//	List<JCheckBox> select_fa = new ArrayList<JCheckBox>();
+//	List<JCheckBox> select_sol = new ArrayList<JCheckBox>();
+//	List<JCheckBox> select_la = new ArrayList<JCheckBox>();
+//	List<JCheckBox> select_ti = new ArrayList<JCheckBox>();
 
 	JCheckBox note_check[][] = new JCheckBox[7][20];
 	JMenuItem mi[] = new JMenuItem[4];
@@ -290,6 +300,8 @@ class Piano extends JFrame {
 
 	class Note_CheckEvent implements ItemListener {
 		// checkBox 이벤트
+		Sound sound = new Sound();
+
 		@Override
 		public void itemStateChanged(ItemEvent e) {
 			// TODO Auto-generated method stub
@@ -298,6 +310,7 @@ class Piano extends JFrame {
 					if (e.getSource() == note_check[0][j]) {
 						note_check[0][j].setBackground(new Color(255, 0, 0));
 						note_check[0][j].setForeground(new Color(0, 0, 255));
+						select_check.add(note_check[0][j]);	
 					}
 				} else if (e.getStateChange() == ItemEvent.DESELECTED) {
 					if (e.getSource() == note_check[0][j]) {
@@ -390,7 +403,6 @@ class Piano extends JFrame {
 					}
 				}
 			}
-
 		}
 	}
 
@@ -400,24 +412,16 @@ class Piano extends JFrame {
 			// TODO Auto-generated method stub
 			Sound sound = new Sound();
 			String action = e.getActionCommand();
-			
-			int count = 0;
-			
+
 			try {
 				if (action == "PLAY") {
-					for (int i = 0; i < 7; i++) {
-						for (int j = 0; j < 20; j++) {
-							if(note_check[i][j].isSelected() == true) {
-								
-							}
+					for (JCheckBox checked_sound : select_check) {
+						if (checked_sound.isSelected()) {
+							sound.stream_do();
+							Thread.sleep(1000);
 						}
 					}
-					for(int i = 0; i < 20; i++) {
-//						note_check[count][i]
-						count++;
-						Thread.sleep(1000);
-					}
-					
+
 				} else if (action == "STOP") {
 
 				} else if (action == "PAUSE") {

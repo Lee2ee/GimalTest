@@ -2,7 +2,6 @@ package com.gimal.test;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -11,11 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -30,19 +25,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.KeyStroke;
 import javax.swing.border.Border;
 
-class Piano extends JFrame {
+public class PianoMainGUI extends JFrame {
 
-	List<JCheckBox> select_check = new ArrayList<JCheckBox>();
-//	List<JCheckBox> select_re = new ArrayList<JCheckBox>();
-//	List<JCheckBox> select_mi = new ArrayList<JCheckBox>();
-//	List<JCheckBox> select_fa = new ArrayList<JCheckBox>();
-//	List<JCheckBox> select_sol = new ArrayList<JCheckBox>();
-//	List<JCheckBox> select_la = new ArrayList<JCheckBox>();
-//	List<JCheckBox> select_ti = new ArrayList<JCheckBox>();
-
+	JCheckBox select_sound[][] = new JCheckBox[7][20];
 	JCheckBox note_check[][] = new JCheckBox[7][20];
 	JMenuItem mi[] = new JMenuItem[4];
 	JButton note_button[] = new JButton[7];
@@ -56,8 +43,7 @@ class Piano extends JFrame {
 	File sound_la = new File("la.wav");
 	File sound_ti = new File("ti.wav");
 
-	public Piano() {
-
+	public PianoMainGUI() {
 		Container ct = getContentPane();
 
 		JPanel northP, north_1, north_2, centerP, southP;
@@ -95,7 +81,7 @@ class Piano extends JFrame {
 
 		for (int i = 0; i < 7; i++) {
 			for (int j = 0; j < 20; j++) {
-				note_check[i][j] = new JCheckBox(note_str[i]);
+				note_check[i][j] = new JCheckBox(note_str[i], false);
 				note_check[i][j].setBorderPainted(true);
 				note_check[i][j].addItemListener(new Note_CheckEvent());
 				north_2.add(note_check[i][j]);
@@ -305,19 +291,20 @@ class Piano extends JFrame {
 		@Override
 		public void itemStateChanged(ItemEvent e) {
 			// TODO Auto-generated method stub
+
 			for (int j = 0; j < 20; j++) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					if (e.getSource() == note_check[0][j]) {
 						note_check[0][j].setBackground(new Color(255, 0, 0));
 						note_check[0][j].setForeground(new Color(0, 0, 255));
-						select_check.add(note_check[0][j]);	
 					}
-				} else if (e.getStateChange() == ItemEvent.DESELECTED) {
+				} else {
 					if (e.getSource() == note_check[0][j]) {
 						note_check[0][j].setBackground(new Color(238, 238, 238));
 						note_check[0][j].setForeground(new Color(0, 0, 0));
 					}
 				}
+				select_sound[0][j] = note_check[0][j];
 			}
 
 			for (int j = 0; j < 20; j++) {
@@ -332,6 +319,7 @@ class Piano extends JFrame {
 						note_check[1][j].setForeground(new Color(0, 0, 0));
 					}
 				}
+				select_sound[1][j] = note_check[1][j];
 			}
 
 			for (int j = 0; j < 20; j++) {
@@ -346,6 +334,7 @@ class Piano extends JFrame {
 						note_check[2][j].setForeground(new Color(0, 0, 0));
 					}
 				}
+				select_sound[2][j] = note_check[2][j];
 			}
 
 			for (int j = 0; j < 20; j++) {
@@ -360,6 +349,7 @@ class Piano extends JFrame {
 						note_check[3][j].setForeground(new Color(0, 0, 0));
 					}
 				}
+				select_sound[3][j] = note_check[3][j];
 			}
 
 			for (int j = 0; j < 20; j++) {
@@ -374,6 +364,7 @@ class Piano extends JFrame {
 						note_check[4][j].setForeground(new Color(0, 0, 0));
 					}
 				}
+				select_sound[4][j] = note_check[4][j];
 			}
 
 			for (int j = 0; j < 20; j++) {
@@ -388,6 +379,7 @@ class Piano extends JFrame {
 						note_check[5][j].setForeground(new Color(0, 0, 0));
 					}
 				}
+				select_sound[5][j] = note_check[5][j];
 			}
 
 			for (int j = 0; j < 20; j++) {
@@ -402,6 +394,7 @@ class Piano extends JFrame {
 						note_check[6][j].setForeground(new Color(0, 0, 0));
 					}
 				}
+				select_sound[6][j] = note_check[6][j];
 			}
 		}
 	}
@@ -412,34 +405,153 @@ class Piano extends JFrame {
 			// TODO Auto-generated method stub
 			Sound sound = new Sound();
 			String action = e.getActionCommand();
+			boolean stp = false;
 
-			try {
-				if (action == "PLAY") {
-					for (JCheckBox checked_sound : select_check) {
-						if (checked_sound.isSelected()) {
-							sound.stream_do();
-							Thread.sleep(1000);
+			if (action == "PLAY") {
+				if (!stp) {
+					new Thread() {
+						public void run() {
+							try {
+								// 도 출력
+								for (int i = 0; i < 20; i++) {
+									if (!select_sound[0][i].isSelected()) {
+										Thread.sleep(500);
+									} else if (select_sound[0][i].isSelected()) {
+										sound.stream_do();
+										Thread.sleep(500);
+									}
+								}
+							} catch (Exception ae) {
+								JOptionPane.showMessageDialog(null, "실행중 오류 발생");
+							}
+
 						}
-					}
+					}.start();
 
-				} else if (action == "STOP") {
+					new Thread() {
+						public void run() {
+							try {
+								// 레 출력
+								for (int i = 0; i < 20; i++) {
+									if (!select_sound[1][i].isSelected()) {
+										Thread.sleep(500);
+									} else if (select_sound[1][i].isSelected()) {
+										sound.stream_re();
+										Thread.sleep(500);
+									}
+								}
+							} catch (Exception ae) {
+								JOptionPane.showMessageDialog(null, "실행중 오류 발생");
+							}
+						}
+					}.start();
 
-				} else if (action == "PAUSE") {
+					new Thread() {
+						public void run() {
+							try {
+								// 미 출력
+								for (int i = 0; i < 20; i++) {
+									if (!select_sound[2][i].isSelected()) {
+										Thread.sleep(500);
+									} else if (select_sound[2][i].isSelected()) {
+										sound.stream_mi();
+										Thread.sleep(500);
+									}
+								}
+							} catch (Exception ae) {
+								JOptionPane.showMessageDialog(null, "실행중 오류 발생");
+							}
+						}
+					}.start();
+
+					new Thread() {
+						public void run() {
+							try {
+								// 파 출력
+								for (int i = 0; i < 20; i++) {
+									if (!select_sound[3][i].isSelected()) {
+										Thread.sleep(500);
+									} else if (select_sound[3][i].isSelected()) {
+										sound.stream_fa();
+										Thread.sleep(500);
+									}
+								}
+							} catch (Exception ae) {
+								JOptionPane.showMessageDialog(null, "실행중 오류 발생");
+							}
+						}
+					}.start();
+
+					new Thread() {
+						public void run() {
+							try {
+								// 솔 출력
+								for (int i = 0; i < 20; i++) {
+									if (!select_sound[4][i].isSelected()) {
+										Thread.sleep(500);
+									} else if (select_sound[4][i].isSelected()) {
+										sound.stream_sol();
+										Thread.sleep(500);
+									}
+								}
+							} catch (Exception ae) {
+								JOptionPane.showMessageDialog(null, "실행중 오류 발생");
+							}
+						}
+					}.start();
+
+					new Thread() {
+						public void run() {
+							try {
+								// 라 출력
+								for (int i = 0; i < 20; i++) {
+									if (!select_sound[5][i].isSelected()) {
+										Thread.sleep(500);
+									} else if (select_sound[5][i].isSelected()) {
+										sound.stream_la();
+										Thread.sleep(500);
+									}
+								}
+							} catch (Exception ae) {
+								JOptionPane.showMessageDialog(null, "실행중 오류 발생");
+							}
+						}
+					}.start();
+
+					new Thread() {
+						public void run() {
+							try {
+								// 시 출력
+								for (int i = 0; i < 20; i++) {
+									if (!select_sound[6][i].isSelected()) {
+										Thread.sleep(500);
+									} else if (select_sound[6][i].isSelected()) {
+										sound.stream_ti();
+										Thread.sleep(500);
+									}
+								}
+							} catch (Exception ae) {
+								JOptionPane.showMessageDialog(null, "실행중 오류 발생");
+							}
+						}
+					}.start();
+				}else {
 
 				}
 
-			} catch (Exception ae) {
-				JOptionPane.showMessageDialog(null, "실행중 오류 발생");
+			} else if (action == "STOP") {
+				
+				
+			} else if (action == "PAUSE") {
+
 			}
+
 		}
 
 	}
-}
-
-public class PianoMaInGUI {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Piano p = new Piano();
+		new PianoMainGUI();
 	}
 }
